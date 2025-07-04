@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>错题报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #f8f9ff;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .question-card {
+            margin: 20px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9ff;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .question-id {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .tag {
+            background: #e1e8ed;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .tag.subject {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .tag.type {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .tag.difficulty {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .question-content {
+            padding: 20px;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .diagram-section {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .diagram-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .answer-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .answer-box {
+            padding: 15px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+
+        .correct-answer {
+            background: #e8f5e8;
+            border-color: #4caf50;
+        }
+
+        .user-answer-wrong {
+            background: #ffe8e8;
+            border-color: #f44336;
+        }
+
+        .answer-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .correct-icon {
+            background: #4caf50;
+        }
+
+        .wrong-icon {
+            background: #f44336;
+        }
+
+        .explanation {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-content {
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .timestamp {
+            text-align: right;
+            padding: 15px 20px;
+            color: #666;
+            font-size: 0.9em;
+            background: #f8f9ff;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+
+            .answer-section {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .question-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 错题报告</h1>
+            <div class="subtitle">Error Questions Report (from JSON)</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number">7</span>
+                <div class="stat-label">总题数</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">0</span>
+                <div class="stat-label">正确题数</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">7</span>
+                <div class="stat-label">错误题数</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">0.0%</span>
+                <div class="stat-label">正确率</div>
+            </div>
+        </div>
+
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 18</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">选择题</span>
+                    <span class="tag difficulty">难度: 2/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">若式子 $sqrt{1-x}$ 在实数范围内有意义，则$x$的取值范围是（ ）A. $x>1$ B. $x<1$ C. $x geq 1$ D. $x leq 1$</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div></div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>D. $x leq 1$</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div>C. $x geq 1$</div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">二次根式有意义的条件是其被开方数必须大于或等于0。所以，为了使$sqrt{1-x}$在实数范围内有意义，必须满足$1-x geq 0$。解这个不等式，将$x$移到不等式右边，得到$1 geq x$，即$x leq 1$。</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:45
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 19</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">选择题</span>
+                    <span class="tag difficulty">难度: 4/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">如图，在矩形纸片$ABCD$中，$AB=6, BC=8$. 将矩形纸片折叠，使点$B$与点$D$重合，则折痕$EF$的长为（ ）A. 6.5 B. 7 C. 7.5 D. 8</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div>矩形ABCD，其中AB=6，BC=8，点B沿折痕EF折叠到点D的几何图</div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>C. 7.5</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div>(无明确选择，但计算错误)</div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">解法一：坐标法
+设矩形顶点坐标为$D(0,0)$，$C(6,0)$，$B(6,8)$，$A(0,8)$。则$AB=6, BC=8$。
+折痕$EF$是线段$BD$的垂直平分线。
+线段$BD$的中点$O$的坐标为$(frac{0+6}{2}, frac{0+8}{2}) = (3,4)$。
+直线$BD$的斜率为$k_{BD} = frac{8-0}{6-0} = frac{8}{6} = frac{4}{3}$。
+由于$EF perp BD$，所以$EF$的斜率为$k_{EF} = -frac{1}{k_{BD}} = -frac{3}{4}$。
+折痕$EF$的直线方程为$y-4 = -frac{3}{4}(x-3)$，即$4(y-4) = -3(x-3)$，化简为$4y-16 = -3x+9$，即$3x+4y-25=0$。
+点$E$在$AD$边上，即$x_E=0$。代入方程得$3(0)+4y_E-25=0$，解得$y_E=frac{25}{4}$。所以$E$点坐标为$(0, frac{25}{4})$。
+点$F$在$BC$边上，即$x_F=6$。代入方程得$3(6)+4y_F-25=0$，解得$18+4y_F-25=0$，即$4y_F=7$，解得$y_F=frac{7}{4}$。所以$F$点坐标为$(6, frac{7}{4})$。
+折痕$EF$的长度为$sqrt{(6-0)^2 + (frac{7}{4}-frac{25}{4})^2} = sqrt{6^2 + (-frac{18}{4})^2} = sqrt{36 + (-frac{9}{2})^2} = sqrt{36 + frac{81}{4}} = sqrt{frac{144+81}{4}} = sqrt{frac{225}{4}} = frac{15}{2} = 7.5$。
+
+解法二：几何法
+设矩形$ABCD$中，$AB=6, BC=8$。将纸片折叠使点$B$与点$D$重合，则折痕$EF$是线段$BD$的垂直平分线。
+连接$BD$，在Rt$	riangle BCD$中，$BD = sqrt{BC^2+CD^2} = sqrt{8^2+6^2} = sqrt{64+36} = sqrt{100} = 10$。
+设$AE=x$，则$DE=AD-AE=8-x$。根据折叠性质，$BE=DE=8-x$。
+在Rt$	riangle ABE$中，$AB^2+AE^2=BE^2$，即$6^2+x^2=(8-x)^2$。
+$36+x^2=64-16x+x^2$，简化得$16x=28$，解得$x=frac{28}{16}=frac{7}{4}$。所以$AE=frac{7}{4}$。
+同理，设$CF=y$，则$BF=BC-CF=8-y$。根据折叠性质，$DF=BF=8-y$。
+在Rt$	riangle CDF$中，$CD^2+CF^2=DF^2$，即$6^2+y^2=(8-y)^2$。
+$36+y^2=64-16y+y^2$，简化得$16y=28$，解得$y=frac{28}{16}=frac{7}{4}$。所以$CF=frac{7}{4}$。
+过点$E$作$EG perp BC$于点$G$，则四边形$ABGE$是矩形，所以$EG=AB=6$，$BG=AE=frac{7}{4}$。
+则$FG = BC - BG - CF = 8 - frac{7}{4} - frac{7}{4} = 8 - frac{14}{4} = 8 - frac{7}{2} = frac{16-7}{2} = frac{9}{2}$。这是错误的。
+应为$FG = BC - BF - CG$. No.
+我们可以发现$AE = CF = frac{7}{4}$。
+$E$点在$AD$上，距离$A$为$7/4$。$F$点在$BC$上，距离$C$为$7/4$。
+过$E$作$EH perp BC$交$BC$于$H$。则$EH=AB=6$。$AH = EF parallel AB$. No.
+$E(0, 8-7/4)$ $F(6, 7/4)$ (using $A(0,8), B(6,8), C(6,0), D(0,0)$ coordinates). $EF$ length calculation same as coordinate method.</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:46
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 20</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">填空题</span>
+                    <span class="tag difficulty">难度: 2/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">计算$sqrt{27}-frac{1}{sqrt{3}}$的结果是\_\_\_\_。</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div></div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>$frac{8sqrt{3}}{3}$</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div>$2sqrt{3}$ (划去), $8/3sqrt{3}$</div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">原式 = $sqrt{9 	imes 3} - frac{1}{sqrt{3}}$
+首先化简$sqrt{27}$：$sqrt{27} = sqrt{9 	imes 3} = 3sqrt{3}$。
+然后对$frac{1}{sqrt{3}}$进行分母有理化：$frac{1}{sqrt{3}} = frac{1 	imes sqrt{3}}{sqrt{3} 	imes sqrt{3}} = frac{sqrt{3}}{3}$。
+将化简后的结果代回原式：$3sqrt{3} - frac{sqrt{3}}{3}$。
+通分：$3sqrt{3} = frac{9sqrt{3}}{3}$。
+所以原式 = $frac{9sqrt{3}}{3} - frac{sqrt{3}}{3} = frac{(9-1)sqrt{3}}{3} = frac{8sqrt{3}}{3}$。</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:46
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 21</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">填空题</span>
+                    <span class="tag difficulty">难度: 3/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">小丽与小明为艺术节做小红花，小丽比小明每小时多做2朵。已知小明做100朵与小丽做90朵所用时间相等，小明、小丽每小时各做小红花多少朵？设小丽每小时做小红花$x$朵，根据题意，列方程为\_\_\_\_。</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div></div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>$frac{100}{x-2} = frac{90}{x}$</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div>$x+2=x$</div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">题目中设小丽每小时做$x$朵小红花。根据“小丽比小明每小时多做2朵”，可知小明每小时做$x-2$朵小红花。
+做小红花的时间 = 总朵数 / 每小时做的朵数。
+小明做100朵所需时间为$frac{100}{x-2}$。
+小丽做90朵所需时间为$frac{90}{x}$。
+根据“小明做100朵与小丽做90朵所用时间相等”，可列方程为$frac{100}{x-2} = frac{90}{x}$。</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:46
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 22</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">填空题</span>
+                    <span class="tag difficulty">难度: 4/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">正比例函数$y_1 = 2x$的图像与反比例函数$y_2 = frac{k}{x}$的图像有一个交点的横坐标是2，当$y_1 > y_2$时，自变量$x$的取值范围是\_\_\_\_。</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div>正比例函数和反比例函数图像的坐标系图</div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>$x > 2$ 或 $-2 < x < 0$</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div>$x 
+e 0$</div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">1. 求$k$的值：
+   由于正比例函数$y_1 = 2x$和反比例函数$y_2 = frac{k}{x}$的图像有一个交点的横坐标是2，将$x=2$代入$y_1 = 2x$，得到$y_1 = 2 	imes 2 = 4$。所以交点坐标为$(2,4)$。
+   将交点坐标$(2,4)$代入反比例函数$y_2 = frac{k}{x}$，得到$4 = frac{k}{2}$，解得$k=8$。
+   所以反比例函数为$y_2 = frac{8}{x}$。
+2. 解不等式$y_1 > y_2$：
+   即 $2x > frac{8}{x}$。
+   这个不等式需要分两种情况讨论，因为$x$可能为正或负：
+   情况1：当$x > 0$时（不等式两边同乘以$x$，不等号方向不变）
+   $2x^2 > 8$
+   $x^2 > 4$
+   由于$x > 0$，所以$x > 2$。
+   情况2：当$x < 0$时（不等式两边同乘以$x$，不等号方向改变）
+   $2x^2 < 8$
+   $x^2 < 4$
+   由于$x < 0$，所以$-2 < x < 0$。
+综上所述，自变量$x$的取值范围是$x > 2$或$-2 < x < 0$。</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:46
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 23</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">填空题</span>
+                    <span class="tag difficulty">难度: 5/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">如图，在$	riangle ABC$中，将顶点A沿中位线DE翻折，使其恰好落在BC边上的点F处，连接AF。下列结论：①$∠AFB=90°$；②$DF$是$	riangle ABC$的中位线；③四边形$ADFE$是菱形；④四边形$ADFE$的面积是$	riangle ABC$面积的一半。其中所有正确结论的序号为\_\_\_\_。</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div>三角形ABC，DE是中位线，顶点A沿DE折叠到BC上的点F的几何图</div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>①④</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">根据题意，DE是$	riangle ABC$的中位线，所以D是AB的中点，E是AC的中点。根据中位线定理，DE$parallel$BC且$DE = frac{1}{2}BC$。
+将顶点A沿中位线DE翻折到点F，根据折叠的性质：
+1. 折痕DE是连接A和F的线段AF的垂直平分线。所以$DE perp AF$。
+2. $AD=DF$，$AE=EF$。
+3. $	riangle ADE cong 	riangle FDE$，所以$angle DAE = angle DFE$。 ($A$的度数等于$angle DFE$的度数)。
+
+逐一分析各个结论：
+① $∠AFB=90°$：
+   因为$DE$是$AF$的垂直平分线，所以$DE perp AF$。
+   又因为$DE$是中位线，所以$DE parallel BC$。
+   如果一条直线垂直于平行线中的一条，那么它也垂直于另一条。因此，$AF perp BC$。
+   所以$angle AFB = 90°$。结论①正确。
+
+② $DF$是$	riangle ABC$的中位线：
+   中位线连接三角形两边的中点。DF连接点D（AB的中点）和点F（BC边上的点）。
+   要使$DF$成为$	riangle ABC$的中位线，点F必须是BC的中点。在一般三角形中，由于$AF perp BC$，只有当$	riangle ABC$是等腰三角形（$AB=AC$）时，AF才是BC边上的中线，此时F才是BC的中点。对于一般三角形，F不一定是BC的中点。所以结论②不一定正确。
+
+③ 四边形$ADFE$是菱形：
+   根据折叠性质，我们有$AD=DF$和$AE=EF$。
+   菱形是四条边都相等的四边形。所以要使四边形$ADFE$是菱形，必须满足$AD=DE=EF=FA$。
+   我们知道$AD = frac{1}{2}AB$（因为D是AB中点），$DE = frac{1}{2}BC$（中位线定理）。
+   所以，若$ADFE$是菱形，则必有$AD=DE$，即$frac{1}{2}AB = frac{1}{2}BC$，这意味着$AB=BC$。
+   这只在$	riangle ABC$是等腰三角形时才成立。对于一般三角形，此结论不成立。所以结论③不正确。
+
+④ 四边形$ADFE$的面积是$	riangle ABC$面积的一半：
+   因为折叠，$	riangle ADE cong 	riangle FDE$。所以$S_{	riangle FDE} = S_{	riangle ADE}$。
+   四边形$ADFE$的面积 $= S_{	riangle ADE} + S_{	riangle FDE} = 2 S_{	riangle ADE}$。
+   由于D、E分别是AB、AC的中点，所以$	riangle ADE$与$	riangle ABC$相似，相似比为$1:2$。
+   因此，$S_{	riangle ADE} = (frac{1}{2})^2 S_{	riangle ABC} = frac{1}{4} S_{	riangle ABC}$。
+   所以，四边形$ADFE$的面积 $= 2 	imes frac{1}{4} S_{	riangle ABC} = frac{1}{2} S_{	riangle ABC}$。
+   结论④正确。
+
+综上所述，正确结论的序号为①和④。</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:47
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-id"># 题目 24</div>
+                <div class="question-meta">
+                    <span class="tag subject">数学</span>
+                    <span class="tag type">填空题</span>
+                    <span class="tag difficulty">难度: 4/5</span>
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">如图，在平面直角坐标系中，反比例函数$y=frac{k}{x}$的图像与一次函数$y=x+1$的图像交于点A、B。若$S_{	riangle AOB}=2$，则$k$的值是\_\_\_\_。</div>
+                
+                <div class="diagram-section">
+                    <div class="diagram-title">🖼️ 题目附图</div>
+                    <img src="/files/ffcc74e0-917d-48a9-aac4-081c10739c47/file-preview?timestamp=1751620811&nonce=7506cd6d1083d9db5f776652eba47718&sign=b0yeb9M4uONl4cQjiHJuLzbZHj9qrJjT6i3EWfO_404=" alt="Question Image" style="max-width: 100%; border-radius: 6px; margin-top: 10px;">
+                </div>
+            
+                <div class="diagram-section">
+                    <div class="diagram-title">📐 图形描述</div>
+                    <div>反比例函数$y=k/x$和一次函数$y=x+1$在坐标系中的交点A、B，以及原点O形成的三角形AOB</div>
+                </div>
+
+                <div class="answer-section">
+                    <div class="answer-box correct-answer">
+                        <div class="answer-label">
+                            <span class="icon correct-icon">✓</span>
+                            正确答案
+                        </div>
+                        <div>15/4</div>
+                    </div>
+                    <div class="answer-box user-answer-wrong">
+                        <div class="answer-label">
+                            <span class="icon wrong-icon">✗</span>
+                            你的答案
+                        </div>
+                        <div>2</div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <div class="explanation-title">💡 详细解析</div>
+                    <div class="explanation-content">设点A的坐标为$(x_A, y_A)$，点B的坐标为$(x_B, y_B)$。
+联立反比例函数和一次函数方程：
+$frac{k}{x} = x+1$
+$k = x(x+1)$
+移项整理得二次方程：$x^2+x-k=0$。
+点A、B的横坐标$x_A, x_B$是该方程的两个根。根据韦达定理：
+$x_A+x_B = -1$
+$x_A x_B = -k$
+
+一次函数$y=x+1$与y轴的交点设为C。当$x=0$时，$y=0+1=1$，所以$C(0,1)$。
+三角形$AOB$的面积可以通过将它分解为$	riangle AOC$和$	riangle BOC$的面积之和来计算（假设A、B分别位于y轴两侧，即$x_A$和$x_B$异号）。
+$S_{	riangle AOB} = S_{	riangle AOC} + S_{	riangle BOC}$。
+$	riangle AOC$以OC为底，高为$|x_A|$；$	riangle BOC$以OC为底，高为$|x_B|$。
+$S_{	riangle AOB} = frac{1}{2} 	imes OC 	imes |x_A| + frac{1}{2} 	imes OC 	imes |x_B|$。
+由于$OC=1$，且考虑到$x_A, x_B$异号（反比例函数$y=k/x$与直线$y=x+1$的交点通常位于y轴两侧，且由$x^2+x-k=0$可知，$x_A x_B = -k$，若$k>0$，则$x_A x_B < 0$，两根异号），不妨设$x_A > 0, x_B < 0$。
+则$S_{	riangle AOB} = frac{1}{2} 	imes 1 	imes x_A + frac{1}{2} 	imes 1 	imes (-x_B) = frac{1}{2}(x_A - x_B)$。
+已知$S_{	riangle AOB}=2$，所以$frac{1}{2}(x_A - x_B) = 2$，即$x_A - x_B = 4$。
+
+现在我们有方程组：
+1) $x_A + x_B = -1$
+2) $x_A - x_B = 4$
+将两方程相加：$(x_A+x_B) + (x_A-x_B) = -1+4 Rightarrow 2x_A = 3 Rightarrow x_A = frac{3}{2}$。
+将$x_A = frac{3}{2}$代入方程1：$frac{3}{2} + x_B = -1 Rightarrow x_B = -1 - frac{3}{2} = -frac{5}{2}$。
+
+最后根据韦达定理$x_A x_B = -k$，将$x_A, x_B$的值代入：
+$(frac{3}{2})(-frac{5}{2}) = -k$
+$-frac{15}{4} = -k$
+$k = frac{15}{4}$。</div>
+                </div>
+            </div>
+
+            <div class="timestamp">
+                📅 创建时间: 2025-07-04T17:22:47
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
